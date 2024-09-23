@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        font-family: poppins;
+    }
+    @font-face {
+        font-family: poppins;
+        src: url(Poppins-Regular.ttf);
+    }
+    body{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(156, 105, 252);
+    }
+    #container{
+        border-radius: 10px;
+        height: 430px;
+        width: 850px;
+        background-color: white;
+        display: flex;
+    }
+    #HangMan_img{
+        height: 100%;
+        width: 350px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    #HangMan_img h1{
+        font-size: 25px;
+        margin-top:20px ;
+    }
+    #Block1{
+        height: 100%;
+        width: 450px;
+        margin-left: 20px;
+    }
+    #input{
+        /* border: solid; */
+        margin-top: 20px;
+        width: 100%;
+        height: 100px;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        font-size: 40px;
+    }
+    #hint{
+        /* border: solid; */
+        height: 70px;
+        display: flex;
+        align-items:center;
+        justify-content: center
+    }
+    #guess{
+        /* border: solid; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+    }
+    #buttons{
+        height:200px ;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .box{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content:center;
+        column-gap: 5px;
+        margin-top: 5px;
+    }
+    button{
+        height: 35px;
+        width: 45px;
+        border-radius: 5px;
+        border: none;
+        background-color:rgb(156, 105, 252) ;
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+</style>
+<body>
+    <div id="container">
+        <div id="HangMan_img">
+            <img id="hangman-img" src="hangman-0.svg" alt="">
+            <h1>HANGMAN GAME</h1>
+        </div>
+        <div id="Block1">
+            <div id="input"></div>
+            <div id="hint">
+                <p></p>
+            </div>
+            <div id="guess">
+                <p id="lives"></p>
+            </div>
+            <div id="buttons">
+                <div class="box">
+                    <button >A</button><button>B</button><button>C</button><button>D</button><button>E</button><button>F</button><button>G</button><button>H</button><button>I</button>
+                </div>
+                <div class="box">
+                    <button>J</button><button>K</button><button>L</button><button>M</button><button>N</button><button>O</button><button>P</button><button>Q</button><button>R</button>
+                </div>
+                <div class="box">
+                    <button>S</button><button>T</button><button>U</button><button>V</button><button>W</button><button>X</button><button>Y</button><button>Z</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        let display = document.getElementById("input")
+        let hint = document.getElementById("hint")
+        let livesDisplay = document.getElementById("lives")
+        let hangmanImg = document.getElementById("hangman-img")
+        let words = [
+            { word: "APPLE", hint: "Fruit, red or green." },
+            { word: "COMPUTER", hint: "Processes data, electronic device." },
+            { word: "OCEAN", hint: "Saltwater, covers Earth." },
+            { word: "MOUNTAIN", hint: "Rises above land." },
+            { word: "GUITAR", hint: "Musical strings." },
+            { word: "SUNFLOWER", hint: "Golden flowers." },
+            { word: "ELEPHANT", hint: "Large mammal, long trunk." },
+            { word: "PIZZA", hint: "Italian dish." },
+            { word: "BOOK", hint: "Printed work, pages." },
+            { word: "BICYCLE", hint: "Two-wheeled vehicle." },
+            { word: "UMBRELLA", hint: "Rain protection." },
+            { word: "LAMP", hint: "Provides light." },
+            { word: "MOON", hint: "Earth's satellite." },
+            { word: "FLOWER", hint: "Blooms, colorful petals." },
+            { word: "CAT", hint: "Domesticated feline." },
+            { word: "DOG", hint: "Faithful pet." },
+            { word: "TREE", hint: "Tall plant, branches." },
+            { word: "RIVER", hint: "Water flow, to sea." },
+            { word: "BRIDGE", hint: "Crosses river." },
+            { word: "CHAIR", hint: "Seat with backrest." },
+            { word: "TELEPHONE", hint: "Communication device." },
+            { word: "KEYBOARD", hint: "Typing tool." },
+            { word: "CLOUD", hint: "Floating water vapor." },
+            { word: "STAR", hint: "Shiny celestial body." },
+            { word: "CAR", hint: "Road vehicle." },
+            { word: "SHOES", hint: "Footwear." },
+            { word: "HOUSE", hint: "Residence." },
+            { word: "CLOCK", hint: "Time indicator." },
+            { word: "FLOWERPOT", hint: "Plant container." },
+            { word: "MIRROR", hint: "Reflective surface." },
+            { word: "TELEVISION", hint: "Screen entertainment." },
+            { word: "WINDOW", hint: "Glass opening." },
+            { word: "BALL", hint: "Round object." },
+            { word: "KEYBOARD", hint: "Typing tool." },
+            { word: "HAT", hint: "Head covering." },
+            { word: "GLOBE", hint: "Earth model." },
+            { word: "MILK", hint: "White liquid." },
+            { word: "TABLE", hint: "Surface furniture." },
+            { word: "PENCIL", hint: "Writing tool." },
+            { word: "JACKET", hint: "Outerwear." },
+            { word: "BANANA", hint: "Curved fruit." },
+            { word: "DOOR", hint: "Entrance barrier." },
+            { word: "PLATE", hint: "Food holder." },
+            { word: "PILLOW", hint: "Sleep support." },
+            { word: "BAG", hint: "Carry container." },
+            { word: "GLASSES", hint: "Vision aid." }
+        ];
+
+        let chosenWord
+        let displayedWord
+        let btn = []
+        let guessedLetters = []
+        let lives = 6
+        
+        let chosenIndex = Math.floor(Math.random() * words.length)
+        chosenWord = words[chosenIndex].word
+        hint.textContent = "Hint: " + words[chosenIndex].hint
+        displayedWord = "_".repeat(chosenWord.length)
+        display.innerHTML = displayedWord
+        livesDisplay.textContent = "Lives: " + lives
+
+        // console.log(displayedWord, chosenWord)
+
+        let buttons = document.querySelectorAll("button")
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                let buttonValue = button.textContent
+                if (!guessedLetters.includes(buttonValue)) {
+                    guessedLetters.push(buttonValue)
+                    if (chosenWord.includes(buttonValue)) {
+                        updateDisplayedWord(buttonValue)
+                    } else {
+                        lives--;
+                        livesDisplay.textContent = "Lives: " + lives
+                        updateHangmanImage()
+                    }
+                    button.disabled = true
+                    checkGameOver()
+                }
+            })
+        })
+
+        function updateDisplayedWord(letter) {
+            let updatedWord = ""
+            for (let i = 0; i < chosenWord.length; i++) {
+                if (guessedLetters.includes(chosenWord[i])) {
+                    updatedWord += chosenWord[i]
+                } else {
+                    updatedWord += "_"
+                }
+            }
+            displayedWord = updatedWord
+            display.innerHTML = displayedWord
+        }
+
+        function updateHangmanImage() {
+            hangmanImg.src = `hangman-${6 - lives}.svg`
+        }
+
+        function checkGameOver() {
+            if (lives === 0) {
+                alert("Game Over! The word was: " + chosenWord)
+                resetGame()
+            } else if (!displayedWord.includes("_")) {
+                alert("Congratulations! You guessed the word: " + chosenWord)
+                resetGame()
+            }
+        }
+
+        function resetGame() {
+            lives = 6
+            guessedLetters = []
+            chosenIndex = Math.floor(Math.random() * words.length)
+            chosenWord = words[chosenIndex].word
+            hint.textContent = "Hint: " + words[chosenIndex].hint
+            displayedWord = "_".repeat(chosenWord.length)
+            display.innerHTML = displayedWord
+            livesDisplay.textContent = "Lives: " + lives
+            hangmanImg.src = "hangman-0.svg"
+            buttons.forEach(button => {
+                button.disabled = false
+            })
+        }
+    </script>
+</body>
+</html>
